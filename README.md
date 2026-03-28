@@ -1,59 +1,232 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# RekapKonten — Sistem Rekap Postingan Konten
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi Laravel 11 untuk merekap postingan konten di berbagai platform (Instagram, YouTube, Website) dengan fitur autentikasi berbasis role, dashboard statistik, rekap bulanan, dan export laporan PDF/Excel.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Stack Teknologi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Komponen         | Detail                       |
+| ---------------- | ---------------------------- |
+| **Framework**    | Laravel 11                   |
+| **Database**     | MySQL                        |
+| **Frontend**     | Laravel Blade + Bootstrap 5  |
+| **Charts**       | Chart.js 4                   |
+| **PDF Export**   | barryvdh/laravel-dompdf ^3.0 |
+| **Excel Export** | maatwebsite/excel ^3.1       |
+| **Icons**        | Bootstrap Icons 1.11         |
+| **Font**         | Plus Jakarta Sans            |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Struktur File
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```
+app/
+├── Exports/
+│   └── PostsExport.php           ← Excel export (multi-sheet)
+├── Http/
+│   ├── Controllers/
+│   │   ├── AuthController.php    ← Login & Logout
+│   │   ├── DashboardController.php
+│   │   ├── PostController.php    ← CRUD Postingan
+│   │   └── ReportController.php  ← Rekap + Export PDF/Excel
+│   └── Middleware/
+│       └── RoleMiddleware.php    ← role:super_admin,admin
+├── Models/
+│   ├── Platform.php
+│   ├── Post.php                  ← SoftDeletes, scope byMonth/byYear
+│   └── User.php
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+bootstrap/
+└── app.php                       ← Registrasi alias middleware 'role'
 
-## Laravel Sponsors
+database/
+├── migrations/
+│   ├── ..._create_users_table.php
+│   ├── ..._create_platforms_table.php
+│   └── ..._create_posts_table.php
+└── seeders/
+    ├── DatabaseSeeder.php
+    ├── PlatformSeeder.php        ← Instagram, YouTube, Website
+    └── UserSeeder.php            ← super_admin & admin
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+resources/views/
+├── auth/
+│   └── login.blade.php
+├── layouts/
+│   └── app.blade.php             ← Layout utama dengan sidebar
+├── dashboard/
+│   └── index.blade.php           ← Chart.js: bar, doughnut, grouped bar
+├── posts/
+│   ├── index.blade.php           ← List + filter + pagination
+│   ├── create.blade.php
+│   ├── edit.blade.php
+│   └── show.blade.php
+└── reports/
+    ├── index.blade.php           ← Rekap bulanan per platform
+    └── pdf.blade.php             ← Template PDF (DomPDF)
 
-### Premium Partners
+routes/
+└── web.php
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## Cara Instalasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1. Buat project Laravel baru
 
-## Code of Conduct
+```bash
+composer create-project laravel/laravel RekapKonten
+cd RekapKonten
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Install dependencies tambahan
 
-## Security Vulnerabilities
+```bash
+composer require barryvdh/laravel-dompdf
+composer require maatwebsite/excel
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Copy semua file dari paket ini ke project
 
-## License
+Salin semua file sesuai struktur di atas ke dalam project Anda.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 4. Konfigurasi environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Edit `.env`:
+
+```env
+DB_DATABASE=RekapKonten
+DB_USERNAME=root
+DB_PASSWORD=your_password
+
+APP_LOCALE=id
+APP_TIMEZONE=Asia/Jakarta
+```
+
+### 5. Konfigurasi locale Indonesia (di config/app.php)
+
+```php
+'locale' => 'id',
+'timezone' => 'Asia/Jakarta',
+```
+
+Install locale Carbon Indonesia:
+
+```bash
+# Carbon sudah ada di Laravel, tapi untuk translasi:
+# Tambahkan di AppServiceProvider::boot():
+\Carbon\Carbon::setLocale('id');
+```
+
+### 6. Publish config Excel (opsional)
+
+```bash
+php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider" --tag=config
+```
+
+### 7. Buat database dan jalankan migration
+
+```bash
+mysql -u root -p -e "CREATE DATABASE RekapKonten CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+php artisan migrate
+php artisan db:seed
+```
+
+### 8. Jalankan server
+
+```bash
+php artisan serve
+```
+
+Akses di: **http://localhost:8000**
+
+---
+
+## Akun Login
+
+| Role        | Email                  | Password |
+| ----------- | ---------------------- | -------- |
+| Super Admin | superadmin@example.com | password |
+| Admin       | admin@example.com      | password |
+
+---
+
+## Fitur Per Role
+
+### Super Admin
+
+-   ✅ Dashboard statistik + Chart.js
+-   ✅ CRUD postingan (tambah, edit, hapus, lihat)
+-   ✅ Filter postingan (platform, bulan, tahun, judul)
+-   ✅ Rekap bulanan per platform
+-   ✅ Export PDF (DomPDF) — multi-platform dengan detail
+-   ✅ Export Excel (Maatwebsite) — multi-sheet per platform
+
+### Admin
+
+-   ✅ Dashboard statistik + Chart.js
+-   ✅ Rekap bulanan per platform
+-   ✅ Export PDF & Excel
+-   ❌ Tidak bisa CRUD postingan
+
+---
+
+## Rekap Bulanan — Logika
+
+```php
+// ReportController::getMonthlyRecap()
+foreach ($platforms as $platform) {
+    $posts = Post::where('platform_id', $platform->id)
+        ->byMonth($year, $month)   // scope di Post model
+        ->orderBy('posted_at')
+        ->get();
+
+    $recap[] = [
+        'platform' => $platform,
+        'total'    => $posts->count(),
+        'posts'    => $posts,
+    ];
+}
+```
+
+---
+
+## Chart.js — Grafik
+
+1. **Bar Chart** — Total posting per bulan (1 tahun)
+2. **Doughnut Chart** — Distribusi posting per platform
+3. **Grouped Bar Chart** — Posting per platform per bulan
+
+---
+
+## Export PDF
+
+Menggunakan **barryvdh/laravel-dompdf**:
+
+-   Header laporan dengan bulan & grand total
+-   Tabel ringkasan per platform + persentase
+-   Detail postingan per platform (judul, tanggal, deskripsi, URL)
+
+## Export Excel
+
+Menggunakan **maatwebsite/excel** dengan **multiple sheets**:
+
+-   Sheet 1: **Ringkasan** (semua platform)
+-   Sheet 2+: **Per platform** (Instagram, YouTube, Website)
+
+---
+
+## Notes Penting
+
+-   `Post` model menggunakan **SoftDeletes** (data tidak benar-benar terhapus)
+-   Middleware `role` didaftarkan di `bootstrap/app.php` (Laravel 11 style)
+-   Semua filter menggunakan **Eloquent scopes** (`byMonth`, `byYear`)
+-   Carbon locale diset ke `id` untuk format tanggal Bahasa Indonesia
