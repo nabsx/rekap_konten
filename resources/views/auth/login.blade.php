@@ -95,12 +95,6 @@
                 <i class="bi bi-box-arrow-in-right me-1"></i> Masuk
             </button>
         </form>
-
-        <div class="demo-box">
-            <strong>Demo Login:</strong><br>
-            Super Admin: superadmin@example.com / password<br>
-            Admin: admin@example.com / password
-        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
