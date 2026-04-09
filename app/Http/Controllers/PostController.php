@@ -23,6 +23,7 @@ class PostController extends Controller
             'content_type' => 'nullable|in:reels,post',
             'followers'   => 'nullable|integer|min:0',
             'viewers'     => 'nullable|integer|min:0',
+            'likes'       => 'nullable|integer|min:0',
             'subscribers' => 'nullable|integer|min:0',
         ];
 

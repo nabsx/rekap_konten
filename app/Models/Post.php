@@ -19,6 +19,7 @@ class Post extends Model
         'content_type',
         'followers',
         'viewers',
+        'likes',
         'subscribers',
     ];
 

@@ -118,10 +118,13 @@
                                 @if($post->viewers)
                                     <div><small class="text-muted">👁️ {{ number_format($post->viewers) }}</small></div>
                                 @endif
+                                @if($post->likes)
+                                    <div><small class="text-muted">❤️ {{ number_format($post->likes) }}</small></div>
+                                @endif
                                 @if($post->subscribers)
                                     <div><small class="text-muted">📢 {{ number_format($post->subscribers) }}</small></div>
                                 @endif
-                                @if(!$post->followers && !$post->viewers && !$post->subscribers)
+                                @if(!$post->followers && !$post->viewers && !$post->likes && !$post->subscribers)
                                     <small class="text-muted">-</small>
                                 @endif
                             </div>

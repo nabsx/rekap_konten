@@ -71,12 +71,12 @@
                 </div>
                 @endif
 
-                @if($post->followers || $post->viewers || $post->subscribers)
+                @if($post->followers || $post->viewers || $post->likes || $post->subscribers)
                 <div class="mt-4 pt-4 border-top">
                     <h6 class="fw-700 text-muted mb-3" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;">Metrik Konten</h6>
                     <div class="row g-3">
                         @if($post->followers)
-                        <div class="col-6 col-md-4">
+                        <div class="col-6 col-md-3">
                             <div class="text-center p-3" style="background:#f1f5f9;border-radius:8px;">
                                 <div style="font-size:1.5rem;color:#0d6efd;">👥</div>
                                 <div class="fw-700" style="font-size:1.25rem;">{{ number_format($post->followers) }}</div>
@@ -86,7 +86,7 @@
                         @endif
 
                         @if($post->viewers)
-                        <div class="col-6 col-md-4">
+                        <div class="col-6 col-md-3">
                             <div class="text-center p-3" style="background:#f1f5f9;border-radius:8px;">
                                 <div style="font-size:1.5rem;color:#0d6efd;">👁️</div>
                                 <div class="fw-700" style="font-size:1.25rem;">{{ number_format($post->viewers) }}</div>
@@ -95,8 +95,18 @@
                         </div>
                         @endif
 
+                        @if($post->likes)
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3" style="background:#f1f5f9;border-radius:8px;">
+                                <div style="font-size:1.5rem;color:#0d6efd;">❤️</div>
+                                <div class="fw-700" style="font-size:1.25rem;">{{ number_format($post->likes) }}</div>
+                                <small class="text-muted">Likes</small>
+                            </div>
+                        </div>
+                        @endif
+
                         @if($post->subscribers)
-                        <div class="col-6 col-md-4">
+                        <div class="col-6 col-md-3">
                             <div class="text-center p-3" style="background:#f1f5f9;border-radius:8px;">
                                 <div style="font-size:1.5rem;color:#0d6efd;">📢</div>
                                 <div class="fw-700" style="font-size:1.25rem;">{{ number_format($post->subscribers) }}</div>

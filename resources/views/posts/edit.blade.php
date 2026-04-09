@@ -82,6 +82,16 @@
                         @enderror
                     </div>
 
+                    {{-- Likes Field --}}
+                    <div class="mb-3" id="likesField" style="display: none;">
+                        <label class="form-label fw-600">Likes</label>
+                        <input type="number" name="likes" id="likes" class="form-control rounded-3 @error('likes') is-invalid @enderror"
+                               value="{{ old('likes', $post->likes) }}" min="0" placeholder="Jumlah likes">
+                        @error('likes')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- Subscribers Field (YouTube Only) --}}
                     <div class="mb-3" id="subscribersField" style="display: none;">
                         <label class="form-label fw-600">Pelanggan</label>
@@ -147,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentTypeField = document.getElementById('contentTypeField');
     const followersField = document.getElementById('followersField');
     const viewersField = document.getElementById('viewersField');
+    const likesField = document.getElementById('likesField');
     const subscribersField = document.getElementById('subscribersField');
 
     function updateFieldsVisibility() {
@@ -157,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         contentTypeField.style.display = 'none';
         followersField.style.display = 'none';
         viewersField.style.display = 'none';
+        likesField.style.display = 'none';
         subscribersField.style.display = 'none';
 
         // Clear requirements
@@ -167,12 +179,15 @@ document.addEventListener('DOMContentLoaded', function() {
             contentTypeField.style.display = 'block';
             followersField.style.display = 'block';
             viewersField.style.display = 'block';
+            likesField.style.display = 'block';
             document.getElementById('contentType').required = true;
         } else if (slug === 'tiktok' || slug === 'x' || slug === 'facebook') {
             followersField.style.display = 'block';
             viewersField.style.display = 'block';
+            likesField.style.display = 'block';
         } else if (slug === 'youtube') {
             viewersField.style.display = 'block';
+            likesField.style.display = 'block';
             subscribersField.style.display = 'block';
         }
         // website: no additional fields

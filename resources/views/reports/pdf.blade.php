@@ -163,7 +163,7 @@
 
 {{-- Footer --}}
 <div class="pdf-footer">
-    <span>ContentHub — Sistem Rekap Konten</span>
+    <span>RekapKonten — Sistem Rekap Konten</span>
     <span>Laporan {{ $monthName }}</span>
 </div>
 
