@@ -38,12 +38,20 @@ class PostController extends Controller
 
     public function create()
     {
+        if (!Auth::user()->isAdmin()) {
+            abort(403, 'Anda tidak memiliki izin untuk membuat postingan.');
+        }
+
         $platforms = Platform::all();
         return view('posts.create', compact('platforms'));
     }
 
     public function store(Request $request)
     {
+        if (!Auth::user()->isAdmin()) {
+            abort(403, 'Anda tidak memiliki izin untuk membuat postingan.');
+        }
+
         $validated = $request->validate([
             'platform_id' => 'required|exists:platforms,id',
             'posted_at'   => 'required|date',
@@ -68,12 +76,20 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        if (!Auth::user()->isAdmin()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengubah postingan.');
+        }
+
         $platforms = Platform::all();
         return view('posts.edit', compact('post', 'platforms'));
     }
 
     public function update(Request $request, Post $post)
     {
+        if (!Auth::user()->isAdmin()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengubah postingan.');
+        }
+
         $validated = $request->validate([
             'platform_id' => 'required|exists:platforms,id',
             'posted_at'   => 'required|date',
@@ -90,6 +106,10 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        if (!Auth::user()->isAdmin()) {
+            abort(403, 'Anda tidak memiliki izin untuk menghapus postingan.');
+        }
+
         $post->delete();
         return redirect()->route('posts.index')
             ->with('success', 'Postingan berhasil dihapus.');

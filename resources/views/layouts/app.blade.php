@@ -154,11 +154,14 @@
             <i class="bi bi-speedometer2"></i> Dashboard
         </a>
 
-        @if(auth()->user()->isSuperAdmin())
+        @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
         <div class="nav-label">Kelola Konten</div>
         <a href="{{ route('posts.index') }}" class="nav-link {{ request()->routeIs('posts.*') ? 'active' : '' }}">
             <i class="bi bi-file-post"></i> Postingan
         </a>
+        @endif
+
+        @if(auth()->user()->isAdmin())
         <a href="{{ route('posts.create') }}" class="nav-link {{ request()->routeIs('posts.create') ? 'active' : '' }}">
             <i class="bi bi-plus-circle"></i> Tambah Postingan
         </a>

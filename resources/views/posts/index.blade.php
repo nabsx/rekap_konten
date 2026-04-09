@@ -11,9 +11,11 @@
         <h5 class="fw-700 mb-0" style="color:#0f172a;">Postingan Konten</h5>
         <small class="text-muted">Kelola semua postingan platform</small>
     </div>
+    @if(auth()->user()->isAdmin())
     <a href="{{ route('posts.create') }}" class="btn btn-primary rounded-3 d-flex align-items-center gap-1">
         <i class="bi bi-plus-circle"></i> Tambah Postingan
     </a>
+    @endif
 </div>
 
 {{-- Filter --}}
@@ -108,6 +110,7 @@
                                 <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-outline-secondary rounded-2" title="Detail">
                                     <i class="bi bi-eye"></i>
                                 </a>
+                                @if(auth()->user()->isAdmin())
                                 <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-outline-primary rounded-2" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
@@ -118,6 +121,7 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

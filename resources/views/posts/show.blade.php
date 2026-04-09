@@ -25,6 +25,7 @@
                         <i class="{{ $post->platform->icon }}"></i>
                         {{ $post->platform->name }}
                     </span>
+                    @if(auth()->user()->isAdmin())
                     <div class="d-flex gap-2">
                         <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-outline-primary rounded-3">
                             <i class="bi bi-pencil me-1"></i>Edit
@@ -37,6 +38,7 @@
                             </button>
                         </form>
                     </div>
+                    @endif
                 </div>
 
                 <h4 class="fw-700 mb-1" style="color:#0f172a;">{{ $post->title }}</h4>
