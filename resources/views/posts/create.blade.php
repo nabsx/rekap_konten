@@ -34,15 +34,59 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-600">Platform <span class="text-danger">*</span></label>
-                        <select name="platform_id" class="form-select rounded-3 @error('platform_id') is-invalid @enderror" required>
+                        <select name="platform_id" id="platformSelect" class="form-select rounded-3 @error('platform_id') is-invalid @enderror" required>
                             <option value="">-- Pilih Platform --</option>
                             @foreach($platforms as $platform)
-                                <option value="{{ $platform->id }}" {{ old('platform_id') == $platform->id ? 'selected' : '' }}>
+                                <option value="{{ $platform->id }}" data-slug="{{ $platform->slug }}" 
+                                    {{ old('platform_id') == $platform->id ? 'selected' : '' }}>
                                     {{ $platform->name }}
                                 </option>
                             @endforeach
                         </select>
                         @error('platform_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Content Type Field (Instagram Only) --}}
+                    <div class="mb-3" id="contentTypeField" style="display: none;">
+                        <label class="form-label fw-600">Tipe Konten <span class="text-danger">*</span></label>
+                        <select name="content_type" id="contentType" class="form-select rounded-3 @error('content_type') is-invalid @enderror">
+                            <option value="">-- Pilih Tipe Konten --</option>
+                            <option value="reels" {{ old('content_type') == 'reels' ? 'selected' : '' }}>Reels</option>
+                            <option value="post" {{ old('content_type') == 'post' ? 'selected' : '' }}>Post</option>
+                        </select>
+                        @error('content_type')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Followers Field --}}
+                    <div class="mb-3" id="followersField" style="display: none;">
+                        <label class="form-label fw-600">Pengikut</label>
+                        <input type="number" name="followers" id="followers" class="form-control rounded-3 @error('followers') is-invalid @enderror"
+                               value="{{ old('followers', 0) }}" min="0" placeholder="Jumlah pengikut">
+                        @error('followers')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Viewers Field --}}
+                    <div class="mb-3" id="viewersField" style="display: none;">
+                        <label class="form-label fw-600">Penonton</label>
+                        <input type="number" name="viewers" id="viewers" class="form-control rounded-3 @error('viewers') is-invalid @enderror"
+                               value="{{ old('viewers', 0) }}" min="0" placeholder="Jumlah penonton">
+                        @error('viewers')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Subscribers Field (YouTube Only) --}}
+                    <div class="mb-3" id="subscribersField" style="display: none;">
+                        <label class="form-label fw-600">Pelanggan</label>
+                        <input type="number" name="subscribers" id="subscribers" class="form-control rounded-3 @error('subscribers') is-invalid @enderror"
+                               value="{{ old('subscribers', 0) }}" min="0" placeholder="Jumlah pelanggan">
+                        @error('subscribers')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -95,4 +139,46 @@
 
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const platformSelect = document.getElementById('platformSelect');
+    const contentTypeField = document.getElementById('contentTypeField');
+    const followersField = document.getElementById('followersField');
+    const viewersField = document.getElementById('viewersField');
+    const subscribersField = document.getElementById('subscribersField');
+
+    function updateFieldsVisibility() {
+        const selectedOption = platformSelect.options[platformSelect.selectedIndex];
+        const slug = selectedOption.getAttribute('data-slug');
+
+        // Hide all fields first
+        contentTypeField.style.display = 'none';
+        followersField.style.display = 'none';
+        viewersField.style.display = 'none';
+        subscribersField.style.display = 'none';
+
+        // Clear requirements
+        document.getElementById('contentType').required = false;
+
+        // Show fields based on platform
+        if (slug === 'instagram') {
+            contentTypeField.style.display = 'block';
+            followersField.style.display = 'block';
+            viewersField.style.display = 'block';
+            document.getElementById('contentType').required = true;
+        } else if (slug === 'tiktok' || slug === 'x' || slug === 'facebook') {
+            followersField.style.display = 'block';
+            viewersField.style.display = 'block';
+        } else if (slug === 'youtube') {
+            viewersField.style.display = 'block';
+            subscribersField.style.display = 'block';
+        }
+        // website: no additional fields
+    }
+
+    platformSelect.addEventListener('change', updateFieldsVisibility);
+    updateFieldsVisibility(); // Initial call on page load
+});
+</script>
 @endsection

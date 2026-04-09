@@ -9,6 +9,39 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    /**
+     * Get dynamic validation rules based on platform
+     */
+    private function getValidationRules(Request $request)
+    {
+        $rules = [
+            'platform_id' => 'required|exists:platforms,id',
+            'posted_at'   => 'required|date',
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'url'         => 'nullable|url|max:500',
+            'content_type' => 'nullable|in:reels,post',
+            'followers'   => 'nullable|integer|min:0',
+            'viewers'     => 'nullable|integer|min:0',
+            'subscribers' => 'nullable|integer|min:0',
+        ];
+
+        // Get platform info
+        $platform = Platform::find($request->platform_id);
+        if (!$platform) {
+            return $rules;
+        }
+
+        $platformSlug = $platform->slug;
+
+        // Instagram: content_type is required
+        if ($platformSlug === 'instagram') {
+            $rules['content_type'] = 'required|in:reels,post';
+        }
+
+        return $rules;
+    }
+
     public function index(Request $request)
     {
         $query = Post::with('platform', 'user')->orderByDesc('posted_at');
@@ -52,13 +85,7 @@ class PostController extends Controller
             abort(403, 'Anda tidak memiliki izin untuk membuat postingan.');
         }
 
-        $validated = $request->validate([
-            'platform_id' => 'required|exists:platforms,id',
-            'posted_at'   => 'required|date',
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'url'         => 'nullable|url|max:500',
-        ]);
+        $validated = $request->validate($this->getValidationRules($request));
 
         $validated['user_id'] = Auth::id();
 
@@ -90,13 +117,7 @@ class PostController extends Controller
             abort(403, 'Anda tidak memiliki izin untuk mengubah postingan.');
         }
 
-        $validated = $request->validate([
-            'platform_id' => 'required|exists:platforms,id',
-            'posted_at'   => 'required|date',
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'url'         => 'nullable|url|max:500',
-        ]);
+        $validated = $request->validate($this->getValidationRules($request));
 
         $post->update($validated);
 

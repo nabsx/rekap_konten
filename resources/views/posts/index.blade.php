@@ -81,6 +81,7 @@
                         <th style="width:50px">#</th>
                         <th>Judul</th>
                         <th>Platform</th>
+                        <th>Metrik</th>
                         <th>Tanggal</th>
                         <th>Dibuat Oleh</th>
                         <th style="width:140px">Aksi</th>
@@ -97,11 +98,33 @@
                             @endif
                         </td>
                         <td>
-                            <span class="platform-badge"
-                                  style="background: {{ $post->platform->color }}1a; color: {{ $post->platform->color }};">
-                                <i class="{{ $post->platform->icon }}"></i>
-                                {{ $post->platform->name }}
-                            </span>
+                            <div>
+                                <span class="platform-badge"
+                                      style="background: {{ $post->platform->color }}1a; color: {{ $post->platform->color }};">
+                                    <i class="{{ $post->platform->icon }}"></i>
+                                    {{ $post->platform->name }}
+                                </span>
+                                @if($post->content_type)
+                                    <br>
+                                    <small class="text-muted">{{ ucfirst($post->content_type) }}</small>
+                                @endif
+                            </div>
+                        </td>
+                        <td style="font-size:.85rem;">
+                            <div>
+                                @if($post->followers)
+                                    <div><small class="text-muted">👥 {{ number_format($post->followers) }}</small></div>
+                                @endif
+                                @if($post->viewers)
+                                    <div><small class="text-muted">👁️ {{ number_format($post->viewers) }}</small></div>
+                                @endif
+                                @if($post->subscribers)
+                                    <div><small class="text-muted">📢 {{ number_format($post->subscribers) }}</small></div>
+                                @endif
+                                @if(!$post->followers && !$post->viewers && !$post->subscribers)
+                                    <small class="text-muted">-</small>
+                                @endif
+                            </div>
                         </td>
                         <td style="font-size:.85rem;">{{ $post->posted_at->format('d M Y') }}</td>
                         <td style="font-size:.85rem;">{{ $post->user->name }}</td>

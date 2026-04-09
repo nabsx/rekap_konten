@@ -20,11 +20,16 @@
         <div class="card">
             <div class="card-body p-4">
                 <div class="d-flex align-items-start justify-content-between mb-3">
-                    <span class="platform-badge fs-6"
-                          style="background: {{ $post->platform->color }}1a; color: {{ $post->platform->color }}; padding: 6px 14px;">
-                        <i class="{{ $post->platform->icon }}"></i>
-                        {{ $post->platform->name }}
-                    </span>
+                    <div>
+                        <span class="platform-badge fs-6"
+                              style="background: {{ $post->platform->color }}1a; color: {{ $post->platform->color }}; padding: 6px 14px;">
+                            <i class="{{ $post->platform->icon }}"></i>
+                            {{ $post->platform->name }}
+                        </span>
+                        @if($post->content_type)
+                            <br><small class="text-muted" style="margin-top:4px;display:inline-block;">{{ ucfirst($post->content_type) }}</small>
+                        @endif
+                    </div>
                     @if(auth()->user()->isAdmin())
                     <div class="d-flex gap-2">
                         <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-outline-primary rounded-3">
@@ -58,11 +63,48 @@
                 @endif
 
                 @if($post->url)
-                <div>
+                <div class="mb-4">
                     <h6 class="fw-700 text-muted mb-2" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;">URL</h6>
                     <a href="{{ $post->url }}" target="_blank" class="text-primary" style="font-size:.875rem;">
                         <i class="bi bi-link-45deg me-1"></i>{{ $post->url }}
                     </a>
+                </div>
+                @endif
+
+                @if($post->followers || $post->viewers || $post->subscribers)
+                <div class="mt-4 pt-4 border-top">
+                    <h6 class="fw-700 text-muted mb-3" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;">Metrik Konten</h6>
+                    <div class="row g-3">
+                        @if($post->followers)
+                        <div class="col-6 col-md-4">
+                            <div class="text-center p-3" style="background:#f1f5f9;border-radius:8px;">
+                                <div style="font-size:1.5rem;color:#0d6efd;">👥</div>
+                                <div class="fw-700" style="font-size:1.25rem;">{{ number_format($post->followers) }}</div>
+                                <small class="text-muted">Pengikut</small>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if($post->viewers)
+                        <div class="col-6 col-md-4">
+                            <div class="text-center p-3" style="background:#f1f5f9;border-radius:8px;">
+                                <div style="font-size:1.5rem;color:#0d6efd;">👁️</div>
+                                <div class="fw-700" style="font-size:1.25rem;">{{ number_format($post->viewers) }}</div>
+                                <small class="text-muted">Penonton</small>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if($post->subscribers)
+                        <div class="col-6 col-md-4">
+                            <div class="text-center p-3" style="background:#f1f5f9;border-radius:8px;">
+                                <div style="font-size:1.5rem;color:#0d6efd;">📢</div>
+                                <div class="fw-700" style="font-size:1.25rem;">{{ number_format($post->subscribers) }}</div>
+                                <small class="text-muted">Pelanggan</small>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
                 </div>
                 @endif
             </div>
