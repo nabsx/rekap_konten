@@ -22,19 +22,19 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard (super_admin & admin)
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Posts routes - both super_admin and admin can view
-    Route::middleware('role:super_admin,admin')->group(function () {
-        Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-        Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-    });
-
-    // Posts CRUD - admin only
+    // Posts admin-only CRUD routes (must come before parameterized routes)
     Route::middleware('role:admin')->group(function () {
         Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
         Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
         Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
         Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
         Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    });
+
+    // Posts view routes - both super_admin and admin can view
+    Route::middleware('role:super_admin,admin')->group(function () {
+        Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+        Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
     });
 
     // Reports — super_admin & admin
