@@ -11,6 +11,24 @@ class PlatformSeeder extends Seeder
     {
         $platforms = [
             [
+                'name'  => 'X (Twitter)',
+                'slug'  => 'x',
+                'icon'  => 'bi-twitter-x',
+                'color' => '#000000',
+            ],
+            [
+                'name'  => 'Facebook',
+                'slug'  => 'facebook',
+                'icon'  => 'bi-facebook',
+                'color' => '#1877F2',
+            ],
+            [
+                'name'  => 'TikTok',
+                'slug'  => 'tiktok',
+                'icon'  => 'bi-tiktok',
+                'color' => '#000000',
+            ],
+            [
                 'name'  => 'Instagram',
                 'slug'  => 'instagram',
                 'icon'  => 'bi-instagram',
